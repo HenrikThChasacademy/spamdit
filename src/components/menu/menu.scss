@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+
+.menu-row {
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 40px;
+    background-color: $menu-background-color;
+}
