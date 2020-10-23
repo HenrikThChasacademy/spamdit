@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Spam from '../spam/spam';
 import Menu from '../menu/menu';
-import Container from 'react-bootstrap/Container'
+import Spammer from '../spammer/spammer';
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
 
@@ -13,7 +14,8 @@ class App extends Component {
         userName: "",
         spam: [],
         showPostComment: false,
-        isLoggedIn: false
+        isLoggedIn: false,
+        newSpam: {},
     }
 
     handleUserInputChange = (userName) => {
@@ -32,6 +34,13 @@ class App extends Component {
 
     handleLogout = () => {
         this.setState({currentUser: "", isLoggedIn: false});
+    }
+
+    handleSpammerChange = (spam) => {
+        this.setState(state => ({
+            ...state.newSpam,
+            newSpam: spam
+        }))
     }
 
     handleTextChange = (text) => {
@@ -83,6 +92,11 @@ class App extends Component {
                     handleLogout={this.handleLogout}
                     />
                 <hr />
+                <Spammer
+                    spammerTopic={this.state.newSpam.topic}
+                    spammerText={this.state.newSpam.text}
+                    handleSpammerChange={this.handleSpammerChange}
+                    />
                 {this.state.spam.map(spam => {
                     return <Spam 
                     key={spam.id}
