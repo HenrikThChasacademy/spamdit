@@ -10,7 +10,7 @@ function Spammer(props) {
         <Container fluid>
             <Row>
             <SpammerInput
-                handleSpammerTopicChange={(topic) => props.handleSpammerChange({...props.newSpam, topic: topic})}
+                handleSpammerTopicChange={(topic) => props.handleSpammerTopicChange({...props.newTopic, text: topic })}
                 handleSpammerTextChange={(text) => props.handleSpammerChange({...props.newSpam, text: text})} 
                 />
             </Row>

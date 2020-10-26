@@ -2,26 +2,29 @@ import React from 'react';
 import Comment from './comment/comment';
 import PostComment from './post-comment/post-comment'
 import './spam.scss';
+import Container from 'react-bootstrap/Container'
 
 function Spam(props){
         return(
 
-            <div className="spam-container">
+            <Container className="spam-container">
                 <div className="heading">
-                    <h2>{props.spam.topic}</h2>
+                    <h2>{props.spam.topicId}</h2>
                 </div>
                 <div className="spam-text">
                     <p>{props.spam.text}</p>
                 </div>
                 <br />
                 <div className="spam-info">
-                    Spammed by {props.spam.user} at {props.spam.date}
+                    Spammed by {props.spam.userId} at {props.spam.date}
                 </div>
                 <hr />
-                {props.comments.map((comment) => {
+                {
+                props.comments &&
+                props.comments.map((comment) => {
                     return <Comment 
                         key={comment.date}
-                        user={comment.user}
+                        userId={comment.userId}
                         text={comment.text}
                         date={comment.date}
                         parent={props.spam.user}
@@ -32,12 +35,12 @@ function Spam(props){
                     Comment
                 </button>
                 {
-                    this.state.showPostComment &&
+                    props.showPostComment &&
                     <PostComment 
                         handleTextChange={props.handleTextChange}
                         handlePostComment={props.handlePostComment}/>
                 }
-            </div>
+            </Container>
         )
     
 }

@@ -14,6 +14,7 @@ class userService {
             return false;
         }
     }
+
 }
 
 export default new userService();

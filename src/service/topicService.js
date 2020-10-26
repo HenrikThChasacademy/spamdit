@@ -2,22 +2,22 @@ import { SPAMDIT_API_URL } from './pathVariables';
 
 var axios = require('axios')
 
-class spamService {
+class topicService {
 
-    SPAM_PATH = SPAMDIT_API_URL +"/spam";
+    TOPIC_PATH = SPAMDIT_API_URL +"/topic";
 
-    createSpam = async (spam) => {
+    createTopic = async (topic) => {
         try {
-            let response = await axios.post(this.SPAM_PATH, spam);
+            let response = await axios.post(this.TOPIC_PATH, topic);
             return response.data;
         } catch {
             return false;
         }
     }
 
-    getSpam = async () => {
+    getTopic = async () => {
         try {
-            let response = await axios(this.SPAM_PATH);
+            let response = await axios(this.TOPIC_PATH);
             return response.data;
         } catch {
             return false;
@@ -26,4 +26,4 @@ class spamService {
 
 }
 
-export default new spamService();
+export default new topicService();

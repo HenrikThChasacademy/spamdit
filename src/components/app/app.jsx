@@ -5,6 +5,8 @@ import Spammer from '../spammer/spammer';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
+import spamService from '../../service/spamService';
+import topicService from '../../service/topicService';
 
 class App extends Component {
 
@@ -16,6 +18,11 @@ class App extends Component {
         showPostComment: false,
         isLoggedIn: false,
         newSpam: {},
+        newTopic: {},
+    }
+    
+    componentDidMount() {
+        this.fetchSpam();
     }
 
     handleUserInputChange = (userName) => {
@@ -36,11 +43,49 @@ class App extends Component {
         this.setState({currentUser: "", isLoggedIn: false});
     }
 
+    handleSpammerTopicChange = (topic) => {
+        this.setState(state => ({
+            ...state.newTopic,
+            newTopic: topic
+        }));
+    }
+
     handleSpammerChange = (spam) => {
+        const newSpam = { ...spam, userId: this.state.currentUser.id};
+
         this.setState(state => ({
             ...state.newSpam,
-            newSpam: spam
-        }))
+            newSpam: newSpam
+        }));
+    }
+
+    fetchSpam = async () => {
+        let spam = await spamService.getSpam();
+        if (spam) {
+            this.setState({spam: spam})
+        }
+    }
+
+    handleSaveSpammerSpam = async () => {
+        let savedTopic = await topicService.createTopic(this.state.newTopic);
+        if (savedTopic) {
+            console.log(this.state.newSpam);
+            let newSpam = this.createSpam(this.state.newSpam, savedTopic);
+            console.log(newSpam);
+            let savedSpam = await spamService.createSpam(newSpam);
+            if (savedSpam) {
+                this.fetchSpam();
+            }
+        }
+        
+    }
+
+    createSpam(spam, topic) {
+        return { ...spam, 
+            userId: this.state.currentUser.id,
+            topicId: topic.id,
+            dateCreated: new Date()
+            };
     }
 
     handleTextChange = (text) => {
@@ -93,9 +138,11 @@ class App extends Component {
                     />
                 <hr />
                 <Spammer
-                    spammerTopic={this.state.newSpam.topic}
-                    spammerText={this.state.newSpam.text}
+                    newSpam={this.state.newSpam}
+                    newTopic={this.state.newTopic}
                     handleSpammerChange={this.handleSpammerChange}
+                    handleSpammerTopicChange={this.handleSpammerTopicChange}
+                    handleSaveSpammerSpam={this.handleSaveSpammerSpam}
                     />
                 {this.state.spam.map(spam => {
                     return <Spam 
@@ -103,7 +150,7 @@ class App extends Component {
                     spam={spam}
                     handleTextChange={this.handleTextChange}
                     handlePostComment={this.handlePostComment}/>
-                })   
+                })
                 }
                 <div style={{ float:"left", clear: "both" }}
                     ref={(el) => { this.messagesEnd = el; }}>
