@@ -7,18 +7,20 @@ import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
 import spamService from '../../service/spamService';
 import topicService from '../../service/topicService';
+import commentService from '../../service/commentService';
 
 class App extends Component {
 
     state = {
-        textToPost: "",
         currentUser: "",
         userName: "",
         spam: [],
         showPostComment: false,
         isLoggedIn: false,
+        newComment: {},
         newSpam: {},
         newTopic: {},
+        comments: [],
     }
     
     componentDidMount() {
@@ -69,9 +71,7 @@ class App extends Component {
     handleSaveSpammerSpam = async () => {
         let savedTopic = await topicService.createTopic(this.state.newTopic);
         if (savedTopic) {
-            console.log(this.state.newSpam);
             let newSpam = this.createSpam(this.state.newSpam, savedTopic);
-            console.log(newSpam);
             let savedSpam = await spamService.createSpam(newSpam);
             if (savedSpam) {
                 this.fetchSpam();
@@ -88,24 +88,27 @@ class App extends Component {
             };
     }
 
-    handleTextChange = (text) => {
-        this.setState({textToPost: text});
+    handleTextChange = (comment) => {
+        this.setState(state => ({
+            ...state.newComment, 
+            newComment: comment
+        }));
     } 
 
-    handlePostComment = () => {
+    handlePostComment = async () => {
+        const newComment = this.createComment(this.state.newComment)
+        console.log(newComment);
+        let savedComment = await commentService.saveComment(newComment);
+
         this.setState(state => ({
-                comments: [...state.comments, this.createComment(state)],
+                comments: [...state.comments, savedComment],
                 showPostComment: !state.showPostComment
         }));
     }
 
-    createComment(state) {
-        return {
-            id:3, 
-            user: state.currentUser,
-            text: state.textToPost, 
-            date: Date.now(), 
-            comments:[] 
+    createComment(comment) {
+        return {...comment,
+            dateCreated: new Date()
         };
     }
 
@@ -127,7 +130,7 @@ class App extends Component {
         return (
             <Container fluid className="app container">
                 <Row className="heading">
-                <h1>Hello Spammers!</h1>
+        <h1>Hello Spammers!</h1>
                 </Row>
                 <Menu 
                     userName={this.state.userName}
@@ -148,8 +151,13 @@ class App extends Component {
                     return <Spam 
                     key={spam.id}
                     spam={spam}
+                    userId={this.state.currentUser.id}
+                    newComment={this.state.newComment}
+                    showPostComment={this.state.showPostComment}
                     handleTextChange={this.handleTextChange}
-                    handlePostComment={this.handlePostComment}/>
+                    handlePostComment={this.handlePostComment}
+                    handleShowPostComment={this.handleShowPostComment}
+                    />
                 })
                 }
                 <div style={{ float:"left", clear: "both" }}
