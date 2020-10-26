@@ -18,7 +18,9 @@ function Comment(props) {
             }
             <div className="comment-reply-container">
             <hr />
-            {props.comments.map((comment) => {
+            {
+            props.comments &&
+            props.comments.map((comment) => {
                     return <Comment 
                     key={comment.date}
                     user={comment.user}

@@ -9,16 +9,18 @@ class commentService {
         try {
             let response = await axios.post(this.COMMENT_PATH, spam);
             return response.data;
-        } catch {
+        } catch(e) {
+            console.log(e);
             return false;
         }
     }
 
-    getCommentForParent = async () => {
+    getCommentForParent = async (id) => {
         try {
-            let response = await axios(this.COMMENT_PATH);
+            let response = await axios(this.COMMENT_PATH +'/parent/' +id);
             return response.data;
-        } catch {
+        } catch(e) {
+            console.log(e);
             return false;
         }
     }
