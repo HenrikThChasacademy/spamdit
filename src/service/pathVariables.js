@@ -1,0 +1,1 @@
+export const SPAMDIT_API_URL = "http://localhost:81";

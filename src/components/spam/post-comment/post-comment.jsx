@@ -1,5 +1,5 @@
 import React from 'react';
-import './_post-comment.sass';
+import './post-comment.scss';
 
 function PostComment(props) {
 
