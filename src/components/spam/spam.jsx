@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Comment from './comment/comment';
 import PostComment from './post-comment/post-comment';
 import './spam.scss';
@@ -11,17 +11,16 @@ function Spam(props){
     const [topic, setTopic] = useState(null);
     const [spamUserName, setSpamUser] = useState(null);
     const [comments, setComments] = useState([]);
+    const [showPost, setShowPost] = useState(false)
 
     useEffect(() => {
         let fetchTopicText = async() => {
             const topic = await topicService.getTopicById(props.spam.topicId);
-            console.log(topic);
             setTopic(topic.text);
         }
           
         let fetchUserName = async() => {
             const spamUser = await userService.getUserById(props.spam.userId);
-            console.log(spamUser)
             setSpamUser(spamUser.name);
         }
 
@@ -30,12 +29,16 @@ function Spam(props){
             console.log(comments);
             setComments(comments);
         }
+
         fetchTopicText();
         fetchUserName();
         fetchComments();
     }, [props.spam.id, props.spam.topicId, props.spam.userId, setSpamUser, setTopic, setComments]);
 
-
+    const toggleShowPost = useCallback(async () => {
+        setShowPost(!showPost);
+      }, [showPost])
+    
     return(
         <Container className="spam-container">
             <div className="heading">
@@ -59,15 +62,17 @@ function Spam(props){
                     text={comment.text}
                     date={comment.date}
                     parentId={props.spam.id}
-                    parentUser={props.spam.userId}
+                    parentUser={spamUserName}
+                    dateCreated={comment.dateCreated}
                     comments={comment.comments}
+                    handleShowCommentPostComment={comment.handleShowPostComment}
                     />
             })}
-            <button className="comment-button" onClick={props.handleShowPostComment}>
+            <button className="comment-button" onClick={toggleShowPost}>
                 Comment
             </button>
             {
-                props.showPostComment &&
+                showPost &&
                 <PostComment 
                     handleTextChange={(text) => props.handleTextChange({...props.newComment, text: text, userId: props.userId, parentId: props.spam.id})}
                     handlePostComment={props.handlePostComment}/>
