@@ -151,7 +151,7 @@ class App extends Component {
                     return <Spam 
                     key={spam.id}
                     spam={spam}
-                    userId={this.state.currentUser.id}
+                    currentUserId={this.state.currentUser.id}
                     newComment={this.state.newComment}
                     showPostComment={this.state.showPostComment}
                     handleTextChange={this.handleTextChange}

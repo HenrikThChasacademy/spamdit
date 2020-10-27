@@ -37,7 +37,8 @@ function Comment(props) {
             {
                 showPost &&
                 <PostComment 
-                    handleTextChange={(text) => props.handleTextChange({...props.comment, text: text, parentId: props.parentId})}
+                    handleTextChange={(text) => props.handleTextChange({...props.newComment, 
+                        text: text, userId: props.currentUserId, parentId: props.comment.id})}
                     handlePostComment={props.handlePostComment}
                     />
             }
@@ -47,12 +48,18 @@ function Comment(props) {
             comments.length !== 0 &&
             comments.map((comment) => {
                     return <Comment 
-                    key={comment.date}
-                    user={comment.user}
-                    text={comment.text}
-                    date={comment.date}
-                    parent={props.parentId}
-                    comments={comment.comments}
+                        key={comment.id}
+                        comment={comment}
+                        currentUserId={props.currentUserId}
+                        text={comment.text}
+                        date={comment.date}
+                        parentId={props.comment.Id}
+                        parentUserId={props.userId}
+                        dateCreated={comment.dateCreated}
+                        comments={comment.comments}
+                        handleTextChange={props.handleTextChange}
+                        handlePostComment={props.handlePostComment}
+                        handleShowCommentPostComment={comment.handleShowPostComment}
                         />
                 })}
             </div>

@@ -58,13 +58,15 @@ function Spam(props){
                 return <Comment 
                     key={comment.id}
                     comment={comment}
-                    userId={comment.userId}
+                    currentUserId={props.currentUserId}
                     text={comment.text}
                     date={comment.date}
                     parentId={props.spam.id}
-                    parentUser={spamUserName}
+                    parentUserId={props.userId}
                     dateCreated={comment.dateCreated}
                     comments={comment.comments}
+                    handleTextChange={props.handleTextChange}
+                    handlePostComment={props.handlePostComment}
                     handleShowCommentPostComment={comment.handleShowPostComment}
                     />
             })}
@@ -74,7 +76,8 @@ function Spam(props){
             {
                 showPost &&
                 <PostComment 
-                    handleTextChange={(text) => props.handleTextChange({...props.newComment, text: text, userId: props.userId, parentId: props.spam.id})}
+                    handleTextChange={(text) => props.handleTextChange({...props.newComment, 
+                        text: text, userId: props.currentUserId, parentId: props.spam.id})}
                     handlePostComment={props.handlePostComment}/>
             }
         </Container>
