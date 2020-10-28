@@ -69,15 +69,33 @@ class App extends Component {
     }
 
     handleSaveSpammerSpam = async () => {
+        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
+        if (!isValidUser) {
+            console.log("we got here");
+            return;
+        }
         let savedTopic = await topicService.createTopic(this.state.newTopic);
         if (savedTopic) {
             let newSpam = this.createSpam(this.state.newSpam, savedTopic);
             let savedSpam = await spamService.createSpam(newSpam);
+            console.log(savedSpam)
             if (savedSpam) {
                 this.fetchSpam();
             }
         }
         
+    }
+
+    checkLoggedInAndSetDefaultUser = async () => {
+        if (this.state.currentUser === "") {
+            const createdUser = await userService.createUser({name: "Anonymous"});
+            if (createdUser) {
+                this.setState({currentUser: createdUser, isLoggedIn: true});
+            } else {
+                return false;
+            }    
+        } 
+        return true;
     }
 
     createSpam(spam, topic) {
@@ -96,18 +114,19 @@ class App extends Component {
     } 
 
     handlePostComment = async () => {
+        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
+        if (!isValidUser) {
+            return;
+        }
         const newComment = this.createComment(this.state.newComment)
         console.log(newComment);
         let savedComment = await commentService.saveComment(newComment);
-
-        this.setState(state => ({
-                comments: [...state.comments, savedComment],
-                showPostComment: !state.showPostComment
-        }));
+        return savedComment;
     }
 
     createComment(comment) {
         return {...comment,
+            userId: this.state.currentUser.id,
             dateCreated: new Date()
         };
     }
@@ -118,14 +137,6 @@ class App extends Component {
         }))
     }
 
-    scrollToBottom() {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
-    }
-
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
     render() {
         return (
             <Container fluid className="app container">
@@ -133,7 +144,7 @@ class App extends Component {
         <h1>Hello Spammers!</h1>
                 </Row>
                 <Menu 
-                    userName={this.state.userName}
+                    userName={this.state.currentUser.name}
                     isLoggedIn={this.state.isLoggedIn}
                     handleUserInputChange={this.handleUserInputChange}
                     handleLogin={this.handleLogin}
@@ -160,9 +171,6 @@ class App extends Component {
                     />
                 })
                 }
-                <div style={{ float:"left", clear: "both" }}
-                    ref={(el) => { this.messagesEnd = el; }}>
-                </div>
             </Container>
         );
     }

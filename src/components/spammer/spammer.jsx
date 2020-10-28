@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 
 function Spammer(props) {
     return(
-        <Container fluid>
+        <Container>
             <Row>
             <SpammerInput
                 handleSpammerTopicChange={(topic) => props.handleSpammerTopicChange({...props.newTopic, text: topic })}
@@ -15,11 +15,11 @@ function Spammer(props) {
                 />
             </Row>
             <Row>
-                <Col>
-                <Button onClick={props.handleSaveSpammerSpam}>Save</Button>
+                <Col md={{ span: 3, offset: 4 }}>
+                <Button variant='success' onClick={props.handleSaveSpammerSpam}>Save</Button>
                 </Col>
                 <Col>
-                <Button onClick={props.handleCancelSpammerSpam}>Cancel</Button>
+                <Button variant='secondary' onClick={props.handleCancelSpammerSpam}>Cancel</Button>
                 </Col>
             </Row>
         </Container>

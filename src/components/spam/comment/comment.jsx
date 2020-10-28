@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './comment.scss';
+import Button from 'react-bootstrap/Button';
 import PostComment from '../post-comment/post-comment';
 import userService from '../../../service/userService';
 import commentService from '../../../service/commentService';
+import Container from 'react-bootstrap/Container';
 
 function Comment(props) {
     const [commentUserName, setSpamUser] = useState(null);
@@ -27,19 +29,33 @@ function Comment(props) {
         setShowPost(!showPost);
     }, [showPost]) 
     
+    const handlePostCommentReply = useCallback(async () => {
+        const newComment = await props.handlePostComment();
+        console.log(comments);
+        console.log(newComment);
+        let newComments = [...comments, newComment];
+        console.log(newComments);
+        setComments(newComments);
+        toggleShowPost();
+    }, [comments, props, toggleShowPost])
+
     return(
-        <div className="comment-container">
-            <b>{commentUserName}</b> replied to <b>{props.parentUser}</b> at {props.comment.dateCreated}
+        <Container fluid className="comment-container">
+            <b>{commentUserName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
             <p>{props.comment.text}</p>
-            <button className="reply-button" onClick={toggleShowPost}>
-                Reply
-            </button>
+            {
+                !showPost &&
+                <Button className="reply-button" onClick={toggleShowPost}>
+                    Reply
+                </Button>
+            }
             {
                 showPost &&
                 <PostComment 
                     handleTextChange={(text) => props.handleTextChange({...props.newComment, 
-                        text: text, userId: props.currentUserId, parentId: props.comment.id})}
-                    handlePostComment={props.handlePostComment}
+                        text: text, parentId: props.comment.id})}
+                    handlePostComment={handlePostCommentReply}
+                    handleCancelPostComment={toggleShowPost}
                     />
             }
             <div className="comment-reply-container">
@@ -50,20 +66,19 @@ function Comment(props) {
                     return <Comment 
                         key={comment.id}
                         comment={comment}
-                        currentUserId={props.currentUserId}
                         text={comment.text}
                         date={comment.date}
                         parentId={props.comment.Id}
                         parentUserId={props.userId}
+                        parentUserName={commentUserName}
                         dateCreated={comment.dateCreated}
                         comments={comment.comments}
                         handleTextChange={props.handleTextChange}
                         handlePostComment={props.handlePostComment}
-                        handleShowCommentPostComment={comment.handleShowPostComment}
                         />
                 })}
             </div>
-        </div>
+        </Container>
     )
     
 }
