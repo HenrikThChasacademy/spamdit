@@ -1,0 +1,10 @@
+@import '../../../styles/variables';
+    
+.comment-container {
+    padding: $container-padding;
+    border-left: 2px solid $blue;
+}
+
+.comment-reply-container {
+    margin-left: 5px;
+}
