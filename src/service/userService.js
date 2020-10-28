@@ -10,11 +10,21 @@ class userService {
         try {
             let response = await axios.post(this.SPAM_PATH, user);
             return response.data;
-        } catch {
+        } catch(e) {
+            console.log(e)
             return false;
         }
     }
 
+    getUserById = async (id) => {
+        try {
+            let response = await axios(this.SPAM_PATH +'/' +id);
+            return response.data;
+        } catch(e) {
+            console.log(e)
+            return false;
+        }
+    }
 }
 
 export default new userService();

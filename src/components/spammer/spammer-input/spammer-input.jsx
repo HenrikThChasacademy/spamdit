@@ -7,7 +7,7 @@ function SpammerInput(props) {
     const { topic, text, handleSpammerTopicChange, handleSpammerTextChange } = props
 
     return(
-        <Container>
+        <Container fluid>
             <Row>
                 <label className="input-label">Enter a topic</label>
             </Row>

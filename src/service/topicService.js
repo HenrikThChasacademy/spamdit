@@ -24,6 +24,14 @@ class topicService {
         }
     }
 
+    getTopicById = async (id) => {
+        try {
+            let response = await axios(this.TOPIC_PATH +'/' +id);
+            return response.data;
+        } catch {
+            return false;
+        }
+    }
 }
 
 export default new topicService();

@@ -7,18 +7,20 @@ import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
 import spamService from '../../service/spamService';
 import topicService from '../../service/topicService';
+import commentService from '../../service/commentService';
 
 class App extends Component {
 
     state = {
-        textToPost: "",
         currentUser: "",
         userName: "",
         spam: [],
         showPostComment: false,
         isLoggedIn: false,
+        newComment: {},
         newSpam: {},
         newTopic: {},
+        comments: [],
     }
     
     componentDidMount() {
@@ -67,17 +69,33 @@ class App extends Component {
     }
 
     handleSaveSpammerSpam = async () => {
+        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
+        if (!isValidUser) {
+            console.log("we got here");
+            return;
+        }
         let savedTopic = await topicService.createTopic(this.state.newTopic);
         if (savedTopic) {
-            console.log(this.state.newSpam);
             let newSpam = this.createSpam(this.state.newSpam, savedTopic);
-            console.log(newSpam);
             let savedSpam = await spamService.createSpam(newSpam);
+            console.log(savedSpam)
             if (savedSpam) {
                 this.fetchSpam();
             }
         }
         
+    }
+
+    checkLoggedInAndSetDefaultUser = async () => {
+        if (this.state.currentUser === "") {
+            const createdUser = await userService.createUser({name: "Anonymous"});
+            if (createdUser) {
+                this.setState({currentUser: createdUser, isLoggedIn: true});
+            } else {
+                return false;
+            }    
+        } 
+        return true;
     }
 
     createSpam(spam, topic) {
@@ -88,24 +106,28 @@ class App extends Component {
             };
     }
 
-    handleTextChange = (text) => {
-        this.setState({textToPost: text});
+    handleTextChange = (comment) => {
+        this.setState(state => ({
+            ...state.newComment, 
+            newComment: comment
+        }));
     } 
 
-    handlePostComment = () => {
-        this.setState(state => ({
-                comments: [...state.comments, this.createComment(state)],
-                showPostComment: !state.showPostComment
-        }));
+    handlePostComment = async () => {
+        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
+        if (!isValidUser) {
+            return;
+        }
+        const newComment = this.createComment(this.state.newComment)
+        console.log(newComment);
+        let savedComment = await commentService.saveComment(newComment);
+        return savedComment;
     }
 
-    createComment(state) {
-        return {
-            id:3, 
-            user: state.currentUser,
-            text: state.textToPost, 
-            date: Date.now(), 
-            comments:[] 
+    createComment(comment) {
+        return {...comment,
+            userId: this.state.currentUser.id,
+            dateCreated: new Date()
         };
     }
 
@@ -115,22 +137,14 @@ class App extends Component {
         }))
     }
 
-    scrollToBottom() {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
-    }
-
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
     render() {
         return (
             <Container fluid className="app container">
                 <Row className="heading">
-                <h1>Hello Spammers!</h1>
+        <h1>Hello Spammers!</h1>
                 </Row>
                 <Menu 
-                    userName={this.state.userName}
+                    userName={this.state.currentUser.name}
                     isLoggedIn={this.state.isLoggedIn}
                     handleUserInputChange={this.handleUserInputChange}
                     handleLogin={this.handleLogin}
@@ -148,13 +162,15 @@ class App extends Component {
                     return <Spam 
                     key={spam.id}
                     spam={spam}
+                    currentUserId={this.state.currentUser.id}
+                    newComment={this.state.newComment}
+                    showPostComment={this.state.showPostComment}
                     handleTextChange={this.handleTextChange}
-                    handlePostComment={this.handlePostComment}/>
+                    handlePostComment={this.handlePostComment}
+                    handleShowPostComment={this.handleShowPostComment}
+                    />
                 })
                 }
-                <div style={{ float:"left", clear: "both" }}
-                    ref={(el) => { this.messagesEnd = el; }}>
-                </div>
             </Container>
         );
     }

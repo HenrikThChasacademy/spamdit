@@ -1,5 +1,6 @@
 import React from 'react';
 import './post-comment.scss';
+import Button from 'react-bootstrap/Button';
 
 function PostComment(props) {
 
@@ -10,7 +11,8 @@ function PostComment(props) {
             <textarea className="comment-input" type="text"
                 onChange={(e) => props.handleTextChange(e.target.value)} />
             </div>
-            <button className="post-button" onClick={props.handlePostComment}>Post comment</button>
+            <Button variant="success" className="post-button" onClick={props.handlePostComment}>Post comment</Button>
+            <Button variant="secondary" className="post-button" onClick={props.handleCancelPostComment}>Abort</Button>
         </div>
     )
 }
