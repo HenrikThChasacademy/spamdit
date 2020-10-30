@@ -7,12 +7,13 @@ import Row from 'react-bootstrap/Row';
 import Vote from '../vote/vote';
 import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
+import { useSetNewComment } from '../../../hooks/useSetNewComment';
 
 function Comment(props) {
     const { userName } = useSetUserName(props.comment.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = 
         useSetComments(props.comment.id);
-
+    const { newComment, handleSetNewComment } = useSetNewComment();
     return(
         <Container fluid className="comment-container">
             <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
@@ -32,9 +33,8 @@ function Comment(props) {
             {
                 showPost &&
                 <PostComment 
-                    handleTextChange={(text) => props.handleTextChange({...props.newComment, 
-                        text: text, parentId: props.comment.id})}
-                    handlePostComment={() => handlePostComment(props.handlePostComment)}
+                    handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
+                    handlePostComment={() => handlePostComment(newComment, props.currentUserId)}
                     handleCancelPostComment={toggleShowPost}
                     />
             }
@@ -54,8 +54,6 @@ function Comment(props) {
                         currentUserId={props.currentUserId}
                         dateCreated={comment.dateCreated}
                         comments={comment.comments}
-                        handleTextChange={props.handleTextChange}
-                        handlePostComment={props.handlePostComment}
                         />
                 })}
             </div>

@@ -7,12 +7,10 @@ import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
 import spamService from '../../service/spamService';
 import topicService from '../../service/topicService';
-import commentService from '../../service/commentService';
 
 class App extends Component {
-
     state = {
-        currentUser: "",
+        currentUser: {id: ""},
         userName: "",
         spam: [],
         showPostComment: false,
@@ -71,14 +69,12 @@ class App extends Component {
     handleSaveSpammerSpam = async () => {
         const isValidUser = await this.checkLoggedInAndSetDefaultUser();
         if (!isValidUser) {
-            console.log("we got here");
             return;
         }
         let savedTopic = await topicService.createTopic(this.state.newTopic);
         if (savedTopic) {
             let newSpam = this.createSpam(this.state.newSpam, savedTopic);
             let savedSpam = await spamService.createSpam(newSpam);
-            console.log(savedSpam)
             if (savedSpam) {
                 this.fetchSpam();
             }
@@ -87,7 +83,7 @@ class App extends Component {
     }
 
     checkLoggedInAndSetDefaultUser = async () => {
-        if (this.state.currentUser === "") {
+        if (this.state.currentUser.id === "") {
             const createdUser = await userService.createUser({name: "Anonymous"});
             if (createdUser) {
                 this.setState({currentUser: createdUser, isLoggedIn: true});
@@ -106,38 +102,8 @@ class App extends Component {
             };
     }
 
-    handleTextChange = (comment) => {
-        this.setState(state => ({
-            ...state.newComment, 
-            newComment: comment
-        }));
-    } 
-
-    handlePostComment = async () => {
-        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
-        if (!isValidUser) {
-            return;
-        }
-        const newComment = this.createComment(this.state.newComment)
-        console.log(newComment);
-        let savedComment = await commentService.saveComment(newComment);
-        return savedComment;
-    }
-
-    createComment(comment) {
-        return {...comment,
-            userId: this.state.currentUser.id,
-            dateCreated: new Date()
-        };
-    }
-
-    handleShowPostComment = () => {
-        this.setState(state => ({
-            showPostComment: !state.showPostComment
-        }))
-    }
-
     render() {
+
         return (
             <Container fluid className="app container">
                 <Row className="heading">
@@ -163,11 +129,6 @@ class App extends Component {
                     key={spam.id}
                     spam={spam}
                     currentUserId={this.state.currentUser.id}
-                    newComment={this.state.newComment}
-                    showPostComment={this.state.showPostComment}
-                    handleTextChange={this.handleTextChange}
-                    handlePostComment={this.handlePostComment}
-                    handleShowPostComment={this.handleShowPostComment}
                     />
                 })
                 }

@@ -7,19 +7,17 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
     const [downvotes, setDownvotes] = useState(0);
 
     const fetchVotes = useCallback(async() => {
-
         const votes = 
             spamId ?
                 await voteService.getVotesForSpam(spamId)
                 :
                 await voteService.getVotesForComment(commentId);
-            if (votes) {
-                const upvotes = votes.filter(vote => vote.isUpvote === true);
-                const nrOfdownvotes = votes.length - upvotes.length;
-                setUpvotes(upvotes.length);
-                setDownvotes(nrOfdownvotes);
-            }
-    
+        if (votes) {
+            const upvotes = votes.filter(vote => vote.isUpvote === true);
+            const nrOfdownvotes = votes.length - upvotes.length;
+            setUpvotes(upvotes.length);
+            setDownvotes(nrOfdownvotes);
+        }
     }, [commentId, spamId])
 
     useEffect(() => {

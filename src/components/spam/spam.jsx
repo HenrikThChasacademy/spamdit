@@ -9,13 +9,13 @@ import Vote from './vote/vote';
 import { useSetTopic } from '../../hooks/useSetTopic';
 import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
-
+import { useSetNewComment } from '../../hooks/useSetNewComment';
 
 function Spam(props){
     const { topic } = useSetTopic(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = useSetComments(props.spam.id);
-
+    const { newComment, handleSetNewComment } = useSetNewComment();
     return(
         <Container className="spam-container">
             <div className="heading">
@@ -29,10 +29,10 @@ function Spam(props){
                 Spammed by {userName} at {props.spam.dateCreated}
             </div>
             <Row md={2}>
-            <Vote 
-                spamId={props.spam.id}
-                currentUserId={props.currentUserId}
-                />
+                <Vote 
+                    spamId={props.spam.id}
+                    currentUserId={props.currentUserId}
+                    />
             </Row>
             {
                 !showPost &&
@@ -43,9 +43,8 @@ function Spam(props){
             {
                 showPost &&
                 <PostComment 
-                    handleTextChange={(text) => props.handleTextChange({...props.newComment, 
-                        text: text, parentId: props.spam.id})}
-                    handlePostComment={() => handlePostComment(props.handlePostComment)}
+                    handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
+                    handlePostComment={() => handlePostComment(newComment, props.currentUserId)}
                     handleCancelPostComment={toggleShowPost}
                     />
             }
@@ -64,8 +63,6 @@ function Spam(props){
                     currentUserId={props.currentUserId}
                     dateCreated={comment.dateCreated}
                     comments={comment.comments}
-                    handleTextChange={props.handleTextChange}
-                    handlePostComment={props.handlePostComment}
                     />
             })}
 
