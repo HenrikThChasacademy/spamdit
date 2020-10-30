@@ -4,6 +4,7 @@ import PostComment from './post-comment/post-comment';
 import './spam.scss';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import Vote from './vote/vote';
 import { useSetTopic } from '../../hooks/useSetTopic';
 import { useSetUserName } from '../../hooks/useSetUserName';
@@ -27,13 +28,12 @@ function Spam(props){
             <div className="spam-info">
                 Spammed by {userName} at {props.spam.dateCreated}
             </div>
-            {
-                props.currentUserId &&
-                <Vote 
-                    spamId={props.spam.id}
-                    currentUserId={props.currentUserId}
-                    />
-            }
+            <Row md={2}>
+            <Vote 
+                spamId={props.spam.id}
+                currentUserId={props.currentUserId}
+                />
+            </Row>
             {
                 !showPost &&
                 <Button variant='primary' className="comment-button" onClick={toggleShowPost}>

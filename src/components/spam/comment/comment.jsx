@@ -3,6 +3,7 @@ import './comment.scss';
 import Button from 'react-bootstrap/Button';
 import PostComment from '../post-comment/post-comment';
 import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import Vote from '../vote/vote';
 import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
@@ -16,13 +17,12 @@ function Comment(props) {
         <Container fluid className="comment-container">
             <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
             <p>{props.comment.text}</p>
-            {
-                props.currentUserId &&
+            <Row md={2}>
                 <Vote 
-                    commentId={props.comment.id}
-                    currentUserId={props.currentUserId}
-                    />
-            }
+                commentId={props.comment.id}
+                currentUserId={props.currentUserId}
+                />
+            </Row>
             {
                 !showPost &&
                 <Button className="reply-button" size="sm" onClick={toggleShowPost}>

@@ -3,6 +3,24 @@ import voteService from '../service/voteService';
 
 export const useSetVote = (spamId, commentId, currentUserId) => {
     const [vote, setVote] = useState({id: null, isActive: false});
+    const [upvotes, setUpvotes] = useState(0);
+    const [downvotes, setDownvotes] = useState(0);
+
+    const fetchVotes = useCallback(async() => {
+
+        const votes = 
+            spamId ?
+                await voteService.getVotesForSpam(spamId)
+                :
+                await voteService.getVotesForComment(commentId);
+            if (votes) {
+                const upvotes = votes.filter(vote => vote.isUpvote === true);
+                const nrOfdownvotes = votes.length - upvotes.length;
+                setUpvotes(upvotes.length);
+                setDownvotes(nrOfdownvotes);
+            }
+    
+    }, [commentId, spamId])
 
     useEffect(() => {
         let fetchVote = async() => {
@@ -16,15 +34,17 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
                     console.log(fetchedVote);
                     return setVote(fetchedVote);
                 } else{
-                    console.log("setting vote");
                     setVote({id: null, isActive: false});
                 }
-            }
-            
+            }   
         }
+
+
+
         fetchVote();
+        fetchVotes();
         return () => {};
-    }, [commentId, currentUserId, spamId])
+    }, [commentId, currentUserId, fetchVotes, spamId])
 
     const handleVoteClick = useCallback(async (isActive, isUpvote) => {
         const createVote = (isActive, isUpvote) => {
@@ -50,11 +70,14 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
             newVote = await voteService.updateVote(createVote(isActive, isUpvote));
         }
         setVote(newVote);
+        fetchVotes();
         return () => {}
-    }, [currentUserId, spamId, vote.id])
+    }, [vote.id, fetchVotes, currentUserId, spamId, commentId])
 
     return {
         vote,
+        upvotes,
+        downvotes,
         handleVoteClick
     }
 }
