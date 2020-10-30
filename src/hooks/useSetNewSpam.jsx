@@ -1,28 +1,25 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import spamService from '../service/spamService';
 import topicService from '../service/topicService';
 import { useSetAnnonymousUser } from './useSetAnnonymousUser';
 
-export const useSetSpam = () => {
-    const [spamList, setSpamList] = useState([]);
+export const useSetNewSpam = () => {
+    const [savedSpam, setSavedSpam] = useState({});
+    const [newTopic, setNewTopic] = useState({});
+    const [newSpam, setNewSpam] = useState({});
     const { checkLoggedInAndSetDefaultUser } = useSetAnnonymousUser();
-    const fetchSpam = useCallback(async () => {
-        const spam = await spamService.getSpam();
-        if (spam) {
-            setSpamList(spam);
-        }
-    },[])
 
-    useEffect(() => {
-        let fetchSpam = async() => {
-            const spam = await spamService.getSpam();
-            setSpamList(spam);
-        };
-        fetchSpam();
-    }, [])
+    const handleTopicChange = useCallback((topic) => {
+        setNewTopic(topic);
+    }, []);
+
+    const handleSpamChange = useCallback((spam) => {
+        setNewSpam(spam);
+    }, []);
 
     const handlePostSpam = useCallback(async (topic, spam, currentUserId) => {
         const userId = await checkLoggedInAndSetDefaultUser(currentUserId);
+        console.log(userId);
         if (!userId) return;
         let savedTopic = await topicService.createTopic(topic);
         if (savedTopic) {
@@ -33,13 +30,17 @@ export const useSetSpam = () => {
                 };
             let savedSpam = await spamService.createSpam(newSpam);
             if (savedSpam) {
-                fetchSpam();
+                setSavedSpam(savedSpam);
             }
         }
-    }, [checkLoggedInAndSetDefaultUser, fetchSpam])
+    }, [checkLoggedInAndSetDefaultUser])
 
     return {
-        spamList,
-        handlePostSpam
+        newTopic,
+        newSpam,
+        savedSpam,
+        handlePostSpam,
+        handleTopicChange,
+        handleSpamChange
     }
 }

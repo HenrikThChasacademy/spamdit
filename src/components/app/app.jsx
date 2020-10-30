@@ -6,19 +6,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import userService from '../../service/userService';
 import spamService from '../../service/spamService';
-import topicService from '../../service/topicService';
 
 class App extends Component {
     state = {
         currentUser: {id: ""},
         userName: "",
         spam: [],
-        showPostComment: false,
         isLoggedIn: false,
-        newComment: {},
-        newSpam: {},
-        newTopic: {},
-        comments: [],
     }
     
     componentDidMount() {
@@ -43,63 +37,11 @@ class App extends Component {
         this.setState({currentUser: "", isLoggedIn: false});
     }
 
-    handleSpammerTopicChange = (topic) => {
-        this.setState(state => ({
-            ...state.newTopic,
-            newTopic: topic
-        }));
-    }
-
-    handleSpammerChange = (spam) => {
-        const newSpam = { ...spam, userId: this.state.currentUser.id};
-
-        this.setState(state => ({
-            ...state.newSpam,
-            newSpam: newSpam
-        }));
-    }
-
     fetchSpam = async () => {
         let spam = await spamService.getSpam();
         if (spam) {
             this.setState({spam: spam})
         }
-    }
-
-    handleSaveSpammerSpam = async () => {
-        const isValidUser = await this.checkLoggedInAndSetDefaultUser();
-        if (!isValidUser) {
-            return;
-        }
-        let savedTopic = await topicService.createTopic(this.state.newTopic);
-        if (savedTopic) {
-            let newSpam = this.createSpam(this.state.newSpam, savedTopic);
-            let savedSpam = await spamService.createSpam(newSpam);
-            if (savedSpam) {
-                this.fetchSpam();
-            }
-        }
-        
-    }
-
-    checkLoggedInAndSetDefaultUser = async () => {
-        if (this.state.currentUser.id === "") {
-            const createdUser = await userService.createUser({name: "Anonymous"});
-            if (createdUser) {
-                this.setState({currentUser: createdUser, isLoggedIn: true});
-            } else {
-                return false;
-            }    
-        } 
-        return true;
-    }
-
-    createSpam(spam, topic) {
-        return { ...spam, 
-            userId: this.state.currentUser.id,
-            topicId: topic.id,
-            dateCreated: new Date()
-            };
     }
 
     render() {
@@ -118,11 +60,7 @@ class App extends Component {
                     />
                 <hr />
                 <Spammer
-                    newSpam={this.state.newSpam}
-                    newTopic={this.state.newTopic}
-                    handleSpammerChange={this.handleSpammerChange}
-                    handleSpammerTopicChange={this.handleSpammerTopicChange}
-                    handleSaveSpammerSpam={this.handleSaveSpammerSpam}
+                    currentUserId={this.state.currentUser.id}
                     />
                 {this.state.spam.map(spam => {
                     return <Spam 

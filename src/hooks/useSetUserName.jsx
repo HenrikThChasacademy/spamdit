@@ -9,8 +9,6 @@ export const useSetUserName = (userId) => {
             setUserName(spamUser.name);
         };
         fetchUserName();
-        return () => {
-        };
     }, [userId])
 
     return {

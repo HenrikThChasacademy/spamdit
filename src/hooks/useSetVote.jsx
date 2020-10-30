@@ -37,11 +37,8 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
             }   
         }
 
-
-
         fetchVote();
         fetchVotes();
-        return () => {};
     }, [commentId, currentUserId, fetchVotes, spamId])
 
     const handleVoteClick = useCallback(async (isActive, isUpvote) => {
@@ -69,7 +66,6 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
         }
         setVote(newVote);
         fetchVotes();
-        return () => {}
     }, [vote.id, fetchVotes, currentUserId, spamId, commentId])
 
     return {

@@ -9,8 +9,6 @@ export const useSetTopic = (topicId) => {
             setTopic(topic.text);
         };
         fetchTopicText();
-        return () => {
-        };
     }, [topicId])
 
     return {
