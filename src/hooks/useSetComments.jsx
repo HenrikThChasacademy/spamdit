@@ -20,10 +20,10 @@ export const useSetComments = (commentId) => {
       }, [showPost])
 
     const handlePostComment = useCallback(async (handlePostComment) => {
+        toggleShowPost();
         const newComment = await handlePostComment();
         let newComments = [...comments, newComment];
         setComments(newComments);
-        toggleShowPost();
         return () => {};
     }, [comments, setComments, toggleShowPost])
 

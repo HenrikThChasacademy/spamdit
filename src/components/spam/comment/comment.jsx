@@ -1,51 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import './comment.scss';
 import Button from 'react-bootstrap/Button';
 import PostComment from '../post-comment/post-comment';
-import userService from '../../../service/userService';
-import commentService from '../../../service/commentService';
 import Container from 'react-bootstrap/Container';
+import Vote from '../vote/vote';
+import { useSetUserName } from '../../../hooks/useSetUserName';
+import { useSetComments } from '../../../hooks/useSetComments';
 
 function Comment(props) {
-    const [commentUserName, setSpamUser] = useState(null);
-    const [comments, setComments] = useState([]);
-    const [showPost, setShowPost] = useState(false);
-    
-    useEffect(() => {
-        let fetchUserName = async() => {
-            const commentUser = await userService.getUserById(props.comment.userId);
-            setSpamUser(commentUser.name);
-        }
-
-        let fetchComments = async() => {
-            const comments = await commentService.getCommentForParent(props.comment.id);
-            setComments(comments);
-        }
-        fetchUserName();
-        fetchComments();
-    }, [props.comment.id, props.comment.userId, setSpamUser, setComments]);
-
-    const toggleShowPost = useCallback(async () => {
-        setShowPost(!showPost);
-    }, [showPost]) 
-    
-    const handlePostCommentReply = useCallback(async () => {
-        const newComment = await props.handlePostComment();
-        console.log(comments);
-        console.log(newComment);
-        let newComments = [...comments, newComment];
-        console.log(newComments);
-        setComments(newComments);
-        toggleShowPost();
-    }, [comments, props, toggleShowPost])
+    const { userName } = useSetUserName(props.comment.userId);
+    const { comments, showPost, toggleShowPost, handlePostComment } = 
+        useSetComments(props.comment.id);
 
     return(
         <Container fluid className="comment-container">
-            <b>{commentUserName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
+            <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
             <p>{props.comment.text}</p>
             {
+                props.currentUserId &&
+                <Vote 
+                    commentId={props.comment.id}
+                    currentUserId={props.currentUserId}
+                    />
+            }
+            {
                 !showPost &&
-                <Button className="reply-button" onClick={toggleShowPost}>
+                <Button className="reply-button" size="sm" onClick={toggleShowPost}>
                     Reply
                 </Button>
             }
@@ -54,7 +34,7 @@ function Comment(props) {
                 <PostComment 
                     handleTextChange={(text) => props.handleTextChange({...props.newComment, 
                         text: text, parentId: props.comment.id})}
-                    handlePostComment={handlePostCommentReply}
+                    handlePostComment={() => handlePostComment(props.handlePostComment)}
                     handleCancelPostComment={toggleShowPost}
                     />
             }
@@ -70,7 +50,8 @@ function Comment(props) {
                         date={comment.date}
                         parentId={props.comment.Id}
                         parentUserId={props.userId}
-                        parentUserName={commentUserName}
+                        parentUserName={userName}
+                        currentUserId={props.currentUserId}
                         dateCreated={comment.dateCreated}
                         comments={comment.comments}
                         handleTextChange={props.handleTextChange}

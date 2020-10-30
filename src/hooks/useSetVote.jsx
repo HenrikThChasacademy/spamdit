@@ -1,26 +1,30 @@
 import { useEffect, useState, useCallback } from 'react';
 import voteService from '../service/voteService';
 
-export const useSetVote = (spamId, currentUserId) => {
-    const [vote, setVote] = useState({id: null, isUpvote: false});
+export const useSetVote = (spamId, commentId, currentUserId) => {
+    const [vote, setVote] = useState({id: null, isActive: false});
 
     useEffect(() => {
         let fetchVote = async() => {
             if (currentUserId) {
-                const fetchedVote = await voteService.getVoteForSpamAndUser(spamId, currentUserId);
+                const fetchedVote = 
+                    spamId ? 
+                        await voteService.getVoteForSpamAndUser(spamId, currentUserId) 
+                        :
+                        await voteService.getVoteForCommentAndUser(commentId, currentUserId);
                 if (fetchedVote) {
                     console.log(fetchedVote);
                     return setVote(fetchedVote);
                 } else{
                     console.log("setting vote");
-                    setVote({id: null, isUpvote: false});
+                    setVote({id: null, isActive: false});
                 }
             }
             
         }
         fetchVote();
         return () => {};
-    }, [currentUserId, spamId])
+    }, [commentId, currentUserId, spamId])
 
     const handleVoteClick = useCallback(async (isActive, isUpvote) => {
         const createVote = (isActive, isUpvote) => {
@@ -28,6 +32,7 @@ export const useSetVote = (spamId, currentUserId) => {
                 isUpvote: !isActive && isUpvote, 
                 userId: currentUserId,
                 spamId: spamId,
+                commentId: commentId,
                 votedDate: new Date()}
         }
 

@@ -27,7 +27,6 @@ function Spam(props){
             <div className="spam-info">
                 Spammed by {userName} at {props.spam.dateCreated}
             </div>
-            <hr />
             {
                 props.currentUserId &&
                 <Vote 
@@ -35,24 +34,6 @@ function Spam(props){
                     currentUserId={props.currentUserId}
                     />
             }
-            {
-            comments.lenght !== 0 &&
-            comments.map((comment) => {
-                return <Comment 
-                    key={comment.id}
-                    comment={comment}
-                    text={comment.text}
-                    date={comment.date}
-                    parentId={props.spam.id}
-                    parentUserId={props.userId}
-                    parentUserName={userName}
-                    dateCreated={comment.dateCreated}
-                    comments={comment.comments}
-                    handleTextChange={props.handleTextChange}
-                    handlePostComment={props.handlePostComment}
-                    />
-            })}
-
             {
                 !showPost &&
                 <Button variant='primary' className="comment-button" onClick={toggleShowPost}>
@@ -68,6 +49,27 @@ function Spam(props){
                     handleCancelPostComment={toggleShowPost}
                     />
             }
+            <hr />
+            {
+            comments.lenght !== 0 &&
+            comments.map((comment) => {
+                return <Comment 
+                    key={comment.id}
+                    comment={comment}
+                    text={comment.text}
+                    date={comment.date}
+                    parentId={props.spam.id}
+                    parentUserId={props.userId}
+                    parentUserName={userName}
+                    currentUserId={props.currentUserId}
+                    dateCreated={comment.dateCreated}
+                    comments={comment.comments}
+                    handleTextChange={props.handleTextChange}
+                    handlePostComment={props.handlePostComment}
+                    />
+            })}
+
+
         </Container>
     )
     

@@ -1,0 +1,19 @@
+@import '../../../styles/variables.scss';
+
+#vote-btn-success {
+    &:active {
+        &:hover{
+            color: $button-success-color;
+            background-color: transparent;
+        }
+    }
+}
+
+#vote-btn-danger {
+    &:active {
+        &:hover {
+            color: $button-danger-color;
+            background-color: transparent;
+        }
+    }
+}

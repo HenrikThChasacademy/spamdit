@@ -42,19 +42,4 @@ button {
 
 button:hover {
   box-shadow: 3px 4px 3px -2px $shadow-color;
-  background-color: $default-button-color-hover;
-  border: none;
 }
-
-button:active  {
-  background-color: $default-button-color-active;
-  border: none;
-  box-shadow: 3px 4px 3px -2px $shadow-color;
-}
-
-button:focus {
-  box-shadow: 3px 4px 3px -2px $shadow-color;
-  background-color: $default-button-color-focus;
-  border: none;
-}
-

@@ -30,12 +30,17 @@ class voteService {
             let response = await axios(this.VOTE_PATH + "/spam/" +spamId);
             return response.data;
         } catch(e) {
-            console.log(e.status);
-            if (e.status === 404) {
+            console.log(e);
+            return false;
+        }
+    }
 
-            } else {
-                console.log(e);
-            }
+    getVotesForComment = async (commentId) => {
+        try {
+            let response = await axios(this.VOTE_PATH + "/comment/" +commentId);
+            return response.data;
+        } catch(e) {
+            console.log(e);
             return false;
         }
     }
@@ -45,10 +50,17 @@ class voteService {
             let response = await axios(this.VOTE_PATH +"/spam/" +spamId +"/user/" +userId);
             return response.data;
         } catch(e) {
-            console.log(e.response.status);
-            if (e.response.status !== 404) {
-                console.log(e);   
-            }
+            console.log(e);   
+            return false;
+        }
+    }
+
+    getVoteForCommentAndUser = async (commentId, userId) => {
+        try {
+            let response = await axios(this.VOTE_PATH +"/comment/" +commentId +"/user/" +userId);
+            return response.data;
+        } catch(e) {
+            console.log(e);   
             return false;
         }
     }
