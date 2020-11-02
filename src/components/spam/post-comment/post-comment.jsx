@@ -9,6 +9,7 @@ function PostComment(props) {
             <div>
             <legend>Make a comment: </legend>
             <textarea className="comment-input" type="text"
+                autoFocus
                 onChange={(e) => props.handleTextChange(e.target.value)} />
             </div>
             <Button variant="success" className="post-button" onClick={props.handlePostComment}>Post comment</Button>
