@@ -19,7 +19,6 @@ export const useSetNewSpam = () => {
 
     const handlePostSpam = useCallback(async (topic, spam, currentUserId) => {
         const userId = await checkLoggedInAndSetDefaultUser(currentUserId);
-        console.log(userId);
         if (!userId) return;
         let savedTopic = await topicService.createTopic(topic);
         if (savedTopic) {

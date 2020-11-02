@@ -29,7 +29,6 @@ export const useSetVote = (spamId, commentId, currentUserId) => {
                         :
                         await voteService.getVoteForCommentAndUser(commentId, currentUserId);
                 if (fetchedVote) {
-                    console.log(fetchedVote);
                     return setVote(fetchedVote);
                 } else{
                     setVote({id: null, isActive: false});

@@ -27,7 +27,6 @@ export const useSetComments = (commentId) => {
             userId: userId,
             dateCreated: new Date()
         }
-        console.log(newComment);
         let savedComment = await commentService.saveComment(newComment);
         if (savedComment) {
             let newComments = [...comments, savedComment];

@@ -5,9 +5,12 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { useSetNewSpam } from '../../hooks/useSetNewSpam';
+import { useSetUser } from '../../hooks/useSetUser';
 
 function Spammer(props) {
-    const { newSpam, newTopic, handlePostSpam, handleTopicChange, handleSpamChange } = useSetNewSpam();
+    const { newSpam, newTopic, 
+        handlePostSpam, handleTopicChange, handleSpamChange } = useSetNewSpam();
+    const { currentUser } = useSetUser();
     return(
         <Container>
             <Row>
@@ -18,7 +21,7 @@ function Spammer(props) {
             </Row>
             <Row>
                 <Col md={{ span: 3, offset: 4 }}>
-                <Button variant='success' onClick={() => handlePostSpam(newTopic, newSpam, props.currentUserId)}>Save</Button>
+                <Button variant='success' onClick={() => handlePostSpam(newTopic, newSpam, currentUser.id)}>Save</Button>
                 </Col>
                 <Col>
                 <Button variant='secondary' onClick={props.handleCancelSpammerSpam}>Cancel</Button>

@@ -10,12 +10,15 @@ import { useSetTopic } from '../../hooks/useSetTopic';
 import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
+import { useSetUser } from '../../hooks/useSetUser';
 
 function Spam(props){
     const { topic } = useSetTopic(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = useSetComments(props.spam.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
+    const { currentUser } = useSetUser();
+
     return(
         <Container className="spam-container">
             <div className="heading">
@@ -31,7 +34,7 @@ function Spam(props){
             <Row md={2}>
                 <Vote 
                     spamId={props.spam.id}
-                    currentUserId={props.currentUserId}
+                    currentUserId={currentUser.id}
                     />
             </Row>
             {
@@ -44,7 +47,7 @@ function Spam(props){
                 showPost &&
                 <PostComment 
                     handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
-                    handlePostComment={() => handlePostComment(newComment, props.currentUserId)}
+                    handlePostComment={() => handlePostComment(newComment, currentUser.id)}
                     handleCancelPostComment={toggleShowPost}
                     />
             }
@@ -60,7 +63,7 @@ function Spam(props){
                     parentId={props.spam.id}
                     parentUserId={props.userId}
                     parentUserName={userName}
-                    currentUserId={props.currentUserId}
+                    currentUserId={currentUser.id}
                     dateCreated={comment.dateCreated}
                     comments={comment.comments}
                     />
