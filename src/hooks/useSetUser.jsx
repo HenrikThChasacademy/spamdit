@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useContext, useState, useCallback } from 'react';
 import userService from '../service/userService';
+import UserContext from '../context/user-context';
 
 export const useSetUser = () => {
-    const [currentUser, setCurrentUser] = useState({id: ""});
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userName, setUsername] = useState("");
+    const [userName, setUserName] = useState("");
 
+    const { currentUser, setCurrentUser } = useContext(UserContext);
+    
     const handleLogin = useCallback(async () => {
         if (userName.length === 0) {
             return;
@@ -15,15 +17,15 @@ export const useSetUser = () => {
             setCurrentUser(createdUser);
             setIsLoggedIn(true);
         }
-    }, [userName])
+    }, [setCurrentUser, userName])
 
     const handleLogout = useCallback(async () => {
         setCurrentUser({id: ""});
         setIsLoggedIn(false);
-    }, [])
+    }, [setCurrentUser])
 
     const handleUserInputChange = useCallback(async (userName) => {
-        setUsername(userName);
+        setUserName(userName);
     }, [])
 
     return {
@@ -32,6 +34,6 @@ export const useSetUser = () => {
         isLoggedIn,
         handleLogin,
         handleLogout,
-        handleUserInputChange
+        handleUserInputChange  
     }
 }

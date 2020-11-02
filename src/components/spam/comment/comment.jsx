@@ -8,12 +8,14 @@ import Vote from '../vote/vote';
 import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
 import { useSetNewComment } from '../../../hooks/useSetNewComment';
+import { useSetUser } from '../../../hooks/useSetUser';
 
 function Comment(props) {
     const { userName } = useSetUserName(props.comment.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = 
         useSetComments(props.comment.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
+    const { currentUser } = useSetUser();
     return(
         <Container fluid className="comment-container">
             <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
@@ -21,7 +23,7 @@ function Comment(props) {
             <Row md={2}>
                 <Vote 
                 commentId={props.comment.id}
-                currentUserId={props.currentUserId}
+                currentUserId={currentUser.Id}
                 />
             </Row>
             {
@@ -34,7 +36,7 @@ function Comment(props) {
                 showPost &&
                 <PostComment 
                     handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
-                    handlePostComment={() => handlePostComment(newComment, props.currentUserId)}
+                    handlePostComment={() => handlePostComment(newComment, currentUser.id)}
                     handleCancelPostComment={toggleShowPost}
                     />
             }
@@ -51,7 +53,6 @@ function Comment(props) {
                         parentId={props.comment.Id}
                         parentUserId={props.userId}
                         parentUserName={userName}
-                        currentUserId={props.currentUserId}
                         dateCreated={comment.dateCreated}
                         comments={comment.comments}
                         />

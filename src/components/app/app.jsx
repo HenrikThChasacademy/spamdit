@@ -1,46 +1,27 @@
-import React, { Component } from 'react';
-import Spam from '../spam/spam';
+import React, { useState } from 'react';
 import Menu from '../menu/menu';
 import Spammer from '../spammer/spammer';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import spamService from '../../service/spamService';
+import SpamList from '../spam-list/spam-list';
+import UserContext from '../../context/user-context';
 
-class App extends Component {
-    state = {
-        spam: []
-    }
-    
-    componentDidMount() {
-        this.fetchSpam();
-    }
+function App(props) {
+    const [currentUser, setCurrentUser] = useState({id: ""});
+    const value = { currentUser, setCurrentUser };
 
-    fetchSpam = async () => {
-        let spam = await spamService.getSpam();
-        if (spam) {
-            this.setState({spam: spam})
-        }
-    }
-
-    render() {
-
-        return (
-            <Container fluid className="app container">
-                <Row className="heading">
-                    <h1>Hello Spammers!</h1>
-                </Row>
+    return (
+        <Container fluid className="app container">
+            <Row className="heading">
+                <h1>Hello Spammers!</h1>
+            </Row>
+            <UserContext.Provider value={value}>
                 <Menu />
                 <hr />
                 <Spammer />
-                {this.state.spam.map(spam => {
-                    return <Spam 
-                    key={spam.id}
-                    spam={spam}
-                    />
-                })
-                }
-            </Container>
-        );
-    }
+                <SpamList />
+            </UserContext.Provider>
+        </Container>
+    );
 }
 export default App;

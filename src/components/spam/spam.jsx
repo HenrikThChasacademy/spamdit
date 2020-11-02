@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Comment from './comment/comment';
 import PostComment from './post-comment/post-comment';
 import './spam.scss';
@@ -11,6 +11,7 @@ import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
 import { useSetUser } from '../../hooks/useSetUser';
+// import UserContext from '../../context/user-context';
 
 function Spam(props){
     const { topic } = useSetTopic(props.spam.topicId);
@@ -63,12 +64,10 @@ function Spam(props){
                     parentId={props.spam.id}
                     parentUserId={props.userId}
                     parentUserName={userName}
-                    currentUserId={currentUser.id}
                     dateCreated={comment.dateCreated}
                     comments={comment.comments}
                     />
             })}
-
 
         </Container>
     )

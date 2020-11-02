@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { createContext, useReducer, Fragment } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -7,7 +7,7 @@ import './menu.scss';
 import { useSetUser } from '../../hooks/useSetUser';
 
 function Menu(){
-    const { isLoggedIn, userName, 
+    const { isLoggedIn, userName,
         handleLogin, handleLogout, handleUserInputChange } = useSetUser();
 
     return(
