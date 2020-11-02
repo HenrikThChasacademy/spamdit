@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Menu from '../menu/menu';
+import Login from '../login/login';
 import Spammer from '../spammer/spammer';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,7 +16,7 @@ function App(props) {
                 <h1>Hello Spammers!</h1>
             </Row>
             <UserContext.Provider value={value}>
-                <Menu />
+                <Login />
                 <hr />
                 <Spammer />
                 <SpamList />

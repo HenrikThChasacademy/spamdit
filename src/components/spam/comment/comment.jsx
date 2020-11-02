@@ -22,9 +22,9 @@ function Comment(props) {
             <p>{props.comment.text}</p>
             <Row md={2}>
                 <Vote 
-                commentId={props.comment.id}
-                currentUserId={currentUser.Id}
-                />
+                    commentId={props.comment.id}
+                    currentUserId={currentUser.id}
+                    />
             </Row>
             {
                 !showPost &&
@@ -51,10 +51,8 @@ function Comment(props) {
                         text={comment.text}
                         date={comment.date}
                         parentId={props.comment.Id}
-                        parentUserId={props.userId}
                         parentUserName={userName}
                         dateCreated={comment.dateCreated}
-                        comments={comment.comments}
                         />
                 })}
             </div>

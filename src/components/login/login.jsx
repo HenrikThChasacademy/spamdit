@@ -1,17 +1,17 @@
-import React, { createContext, useReducer, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import UserInput from './user-input/user-input';
-import './menu.scss';
+import './login.scss';
 import { useSetUser } from '../../hooks/useSetUser';
 
-function Menu(){
+function Login(){
     const { isLoggedIn, userName,
         handleLogin, handleLogout, handleUserInputChange } = useSetUser();
 
     return(
-        <Row className="menu-row">
+        <Row className="login-row">
             <Col>
             {
                 isLoggedIn?
@@ -33,4 +33,4 @@ function Menu(){
     )
 }
 
-export default Menu;
+export default Login;
