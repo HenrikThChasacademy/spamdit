@@ -6,12 +6,11 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Spam from '../spam/spam';
 import { useSetNewSpam } from '../../hooks/useSetNewSpam';
-import { useSetUser } from '../../hooks/useSetUser';
+import UserContext from '../../context/user-context';
 
 function Spammer(props) {
     const { newSpam, newTopic, savedSpam,
         handlePostSpam, handleTopicChange, handleSpamChange } = useSetNewSpam();
-    const { currentUser } = useSetUser();
     return(
         <Container>
             <Row>
@@ -22,7 +21,13 @@ function Spammer(props) {
             </Row>
             <Row>
                 <Col md={{ span: 3, offset: 4 }}>
-                <Button variant='success' onClick={() => handlePostSpam(newTopic, newSpam, currentUser.id)}>Save</Button>
+                <UserContext.Consumer>
+                    {(currentUserContext) =>
+                        <Button variant='success' 
+                            onClick={() => handlePostSpam(newTopic, newSpam, currentUserContext.id)}>Save
+                            </Button>
+                    }
+                </UserContext.Consumer>
                 </Col>
                 <Col>
                 <Button variant='secondary' onClick={props.handleCancelSpammerSpam}>Cancel</Button>

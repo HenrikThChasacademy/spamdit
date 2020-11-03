@@ -27,7 +27,6 @@ function Login(){
                     <Button onClick={handleLogin}>Login</Button>
                 </Fragment>
             }
-                
             </Col>
         </Row>
     )

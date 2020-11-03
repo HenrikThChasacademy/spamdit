@@ -17,20 +17,20 @@ function App(props) {
             <Row className="heading">
                 <h1>Hello Spammers!</h1>
             </Row>
-            <UserContext.Provider value={value}>
-                <Login />
-                <Router>
-                    <Menu />
-                    <hr />
-                    <Switch>
-                        <Route exact path="/spam"><Spammer /></Route>
-                        <Route exact path="/spamlist"><SpamList /></Route>
-                        <Route exact path="/topiclist"><TopicList /></Route>
-                        <Route exact path="/"><SpamList /></Route>
-                        <Route exact path="*" render={() => <h1> NOT FOUND</h1>} />
-                    </Switch>
-                </Router>
-            </UserContext.Provider>
+                <UserContext.Provider value={value}>
+                    <Login />
+                    <Router>
+                        <Menu />
+                        <hr />
+                        <Switch>
+                                <Route exact path="/spam"><Spammer /></Route>
+                                <Route exact path="/spamlist"><SpamList /></Route>
+                                <Route exact path="/topiclist"><TopicList /></Route>
+                                <Route exact path="/"><SpamList /></Route>
+                            <Route exact path="*" render={() => <h1> NOT FOUND</h1>} />
+                        </Switch>
+                    </Router>
+                </UserContext.Provider>
         </Container>
     );
 }

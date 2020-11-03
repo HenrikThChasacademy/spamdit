@@ -10,14 +10,13 @@ import { useSetTopicName } from '../../hooks/useSetTopicName';
 import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
-import { useSetUser } from '../../hooks/useSetUser';
+import UserContext from '../../context/user-context';
 
 function Spam(props){
     const { topic } = useSetTopicName(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = useSetComments(props.spam.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
-    const { currentUser } = useSetUser();
 
     return(
         <Container className="spam-container">
@@ -32,10 +31,14 @@ function Spam(props){
                 Spammed by {userName} at {props.spam.dateCreated}
             </div>
             <Row md={2}>
-                <Vote 
-                    spamId={props.spam.id}
-                    currentUserId={currentUser.id}
-                    />
+                <UserContext.Consumer>
+                    {(currentUserContext) => 
+                        <Vote 
+                            spamId={props.spam.id}
+                            currentUserId={currentUserContext.id}
+                            />    
+                    }
+                </UserContext.Consumer>
             </Row>
             {
                 !showPost &&
@@ -45,11 +48,15 @@ function Spam(props){
             }
             {
                 showPost &&
-                <PostComment 
-                    handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
-                    handlePostComment={() => handlePostComment(newComment, currentUser.id)}
-                    handleCancelPostComment={toggleShowPost}
-                    />
+                <UserContext.Consumer>
+                    {(currentUserContext) =>
+                        <PostComment 
+                            handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
+                            handlePostComment={() => handlePostComment(newComment, currentUserContext.id)}
+                            handleCancelPostComment={toggleShowPost}
+                            />
+                    }
+                </UserContext.Consumer>
             }
             <hr />
             {
