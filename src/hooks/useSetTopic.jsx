@@ -1,17 +1,19 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import topicService from '../service/topicService';
 
-export const useSetTopic = (topicId) => {
-    const [topic, setTopic] = useState(null);
+export const useSetTopic = () => {
+    const [topics, setTopics] = useState([]);
+
     useEffect(() => {
-        let fetchTopicText = async() => {
-            const topic = await topicService.getTopicById(topicId);
-            setTopic(topic.text);
-        };
-        fetchTopicText();
-    }, [topicId])
+        let fetchTopics = async() => {
+            let topics = await topicService.getTopic();
+            if (topics);
+                setTopics(topics);
+        }
+        fetchTopics();
+    }, [])
 
     return {
-        topic
+        topics
     }
 }

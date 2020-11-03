@@ -6,14 +6,14 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Vote from './vote/vote';
-import { useSetTopic } from '../../hooks/useSetTopic';
+import { useSetTopicName } from '../../hooks/useSetTopicName';
 import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
 import { useSetUser } from '../../hooks/useSetUser';
 
 function Spam(props){
-    const { topic } = useSetTopic(props.spam.topicId);
+    const { topic } = useSetTopicName(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = useSetComments(props.spam.id);
     const { newComment, handleSetNewComment } = useSetNewComment();

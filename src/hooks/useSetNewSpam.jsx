@@ -4,7 +4,7 @@ import topicService from '../service/topicService';
 import { useSetAnnonymousUser } from './useSetAnnonymousUser';
 
 export const useSetNewSpam = () => {
-    const [savedSpam, setSavedSpam] = useState({});
+    const [savedSpam, setSavedSpam] = useState(false);
     const [newTopic, setNewTopic] = useState({});
     const [newSpam, setNewSpam] = useState({});
     const { checkLoggedInAndSetDefaultUser } = useSetAnnonymousUser();

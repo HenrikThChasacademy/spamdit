@@ -4,11 +4,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
+import Spam from '../spam/spam';
 import { useSetNewSpam } from '../../hooks/useSetNewSpam';
 import { useSetUser } from '../../hooks/useSetUser';
 
 function Spammer(props) {
-    const { newSpam, newTopic, 
+    const { newSpam, newTopic, savedSpam,
         handlePostSpam, handleTopicChange, handleSpamChange } = useSetNewSpam();
     const { currentUser } = useSetUser();
     return(
@@ -27,6 +28,16 @@ function Spammer(props) {
                 <Button variant='secondary' onClick={props.handleCancelSpammerSpam}>Cancel</Button>
                 </Col>
             </Row>
+            
+            {
+                savedSpam &&
+                    <Spam 
+                        key={savedSpam.id}
+                        spam={savedSpam}
+                        />
+            }
+            
+            
         </Container>
     )
 }
