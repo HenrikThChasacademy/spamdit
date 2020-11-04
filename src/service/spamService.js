@@ -35,7 +35,6 @@ class spamService {
 
     getSpamForUser = async (userId) => {
         try {
-            console.log(userId);
             let response = await axios(this.SPAM_PATH+ "/user/" +userId);
             return response.data;
         } catch {
