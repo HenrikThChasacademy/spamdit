@@ -16,11 +16,10 @@ function TopicList(props) {
             <hr />
             {
             filteredTopics.length !== 0 &&
-            filteredTopics.map(topic => {
-                return <Topic 
+            filteredTopics.map(topic => 
+                <Topic 
                     key={topic.id}
-                    topic={topic} />
-            })
+                    topic={topic} />)
             }
         </Container>
     )

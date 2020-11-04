@@ -8,6 +8,8 @@ import SpamList from '../spam-list/spam-list';
 import UserContext from '../../context/user-context';
 import Menu from '../menu/menu';
 import TopicList from '../topic-list/topic-list';
+import UserSpam from '../user-spam/user-spam';
+
 function App(props) {
     const [currentUser, setCurrentUser] = useState({id: ""});
     const value = { currentUser, setCurrentUser };
@@ -26,6 +28,7 @@ function App(props) {
                                 <Route exact path="/spam"><Spammer /></Route>
                                 <Route exact path="/spamlist"><SpamList /></Route>
                                 <Route exact path="/topiclist"><TopicList /></Route>
+                                <Route path="/userspam/:userId"><UserSpam /></Route>
                                 <Route exact path="/"><SpamList /></Route>
                             <Route exact path="*" render={() => <h1> NOT FOUND</h1>} />
                         </Switch>

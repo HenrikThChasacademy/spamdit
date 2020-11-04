@@ -13,14 +13,12 @@ function Topic(props){
             </Container>
             {   
                 topicSpam.lenght !== 0 &&
-                topicSpam.map(spam => {
-                    console.log("we got a spam", spam)
-                    return <Container fluid>
+                topicSpam.map(spam => 
+                    <Container key={spam.id} fluid>
                         <Spam 
                             key={spam.id}
                             spam={spam}/>
                     </Container>
-                }
                 )
             }
         </Container>

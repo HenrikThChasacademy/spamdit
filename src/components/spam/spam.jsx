@@ -11,7 +11,7 @@ import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
 import UserContext from '../../context/user-context';
-
+import { Link } from 'react-router-dom';
 function Spam(props){
     const { topic } = useSetTopicName(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
@@ -28,7 +28,8 @@ function Spam(props){
             </div>
             <br />
             <div className="spam-info">
-                Spammed by {userName} at {props.spam.dateCreated}
+                Spammed by 
+                <Link to={`/userspam/${props.spam.userId}`}> <b>{userName}</b> </Link> at {props.spam.dateCreated}
             </div>
             <Row md={2}>
                 <UserContext.Consumer>
@@ -69,6 +70,7 @@ function Spam(props){
                     date={comment.date}
                     parentId={props.spam.id}
                     parentUserName={userName}
+                    parentUserId={props.spam.userId}
                     dateCreated={comment.dateCreated}
                     />
             })}
