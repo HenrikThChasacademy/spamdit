@@ -35,7 +35,7 @@ function Spam(props){
                     {(currentUserContext) => 
                         <Vote 
                             spamId={props.spam.id}
-                            currentUserId={currentUserContext.id}
+                            currentUserId={currentUserContext.currentUser.id}
                             />    
                     }
                 </UserContext.Consumer>
@@ -52,7 +52,7 @@ function Spam(props){
                     {(currentUserContext) =>
                         <PostComment 
                             handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
-                            handlePostComment={() => handlePostComment(newComment, currentUserContext.id)}
+                            handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
                             handleCancelPostComment={toggleShowPost}
                             />
                     }

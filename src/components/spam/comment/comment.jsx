@@ -25,7 +25,7 @@ function Comment(props) {
                     {(currentUserContext) =>
                         <Vote 
                             commentId={props.comment.id}
-                            currentUserId={currentUserContext.id}
+                            currentUserId={currentUserContext.currentUser.id}
                             />
                     }
                 </UserContext.Consumer>
@@ -42,7 +42,7 @@ function Comment(props) {
                     {(currentUserContext) => {
                         <PostComment 
                             handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
-                            handlePostComment={() => handlePostComment(newComment, currentUserContext.id)}
+                            handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
                             handleCancelPostComment={toggleShowPost}
                             />
                     }}
