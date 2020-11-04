@@ -24,6 +24,15 @@ class spamService {
         }
     }
 
+    getSpamForTopic = async (topicId) => {
+        try {
+            let response = await axios(this.SPAM_PATH+ "/topic/" +topicId);
+            return response.data;
+        } catch {
+            return false;
+        }
+    }
+
 }
 
 export default new spamService();

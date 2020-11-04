@@ -1,35 +1,23 @@
-import React, { createContext, useReducer, Fragment } from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import UserInput from './user-input/user-input';
-import './menu.scss';
-import { useSetUser } from '../../hooks/useSetUser';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Menu(){
-    const { isLoggedIn, userName,
-        handleLogin, handleLogout, handleUserInputChange } = useSetUser();
-
+function Menu() {
     return(
-        <Row className="menu-row">
-            <Col>
-            {
-                isLoggedIn?
-                <Fragment>
-                    <h3>Welcome master {userName}</h3>
-                    <Button onClick={handleLogout}>Logout</Button>
-                </Fragment>
-                :
-                <Fragment>
-                    <UserInput 
-                        userName={userName}
-                        handleUserInputChange={handleUserInputChange}/>
-                    <Button onClick={handleLogin}>Login</Button>
-                </Fragment>
-            }
-                
-            </Col>
-        </Row>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div className="collapse navbar-collapse">
+                <ul className="navbar-nav mr-auto">
+                    <li className = "nav-item">
+                        <Link className="nav-link" to ="/spam">Spam</Link>
+                    </li>
+                    <li className = "nav-item">
+                        <Link className="nav-link" to ="/spamlist">SpamList</Link>
+                    </li>
+                    <li className = "nav-item">
+                        <Link className="nav-link" to ="/topiclist">TopicList</Link>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     )
 }
 
