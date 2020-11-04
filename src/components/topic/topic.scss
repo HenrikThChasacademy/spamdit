@@ -1,0 +1,8 @@
+@import '../../styles/variables.scss';
+
+.topic-container {
+    &:hover {
+        box-shadow: 4px 4px 4px 4px $hover-shadow-color;
+        background-color: $hover-background-color;
+    }
+}

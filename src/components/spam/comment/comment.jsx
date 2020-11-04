@@ -8,23 +8,27 @@ import Vote from '../vote/vote';
 import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
 import { useSetNewComment } from '../../../hooks/useSetNewComment';
-import { useSetUser } from '../../../hooks/useSetUser';
+import UserContext from '../../../context/user-context';
 
 function Comment(props) {
     const { userName } = useSetUserName(props.comment.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = 
         useSetComments(props.comment.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
-    const { currentUser } = useSetUser();
+
     return(
         <Container fluid className="comment-container">
             <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
             <p>{props.comment.text}</p>
             <Row md={2}>
-                <Vote 
-                commentId={props.comment.id}
-                currentUserId={currentUser.Id}
-                />
+                <UserContext.Consumer>
+                    {(currentUserContext) =>
+                        <Vote 
+                            commentId={props.comment.id}
+                            currentUserId={currentUserContext.currentUser.id}
+                            />
+                    }
+                </UserContext.Consumer>
             </Row>
             {
                 !showPost &&
@@ -34,11 +38,15 @@ function Comment(props) {
             }
             {
                 showPost &&
-                <PostComment 
-                    handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
-                    handlePostComment={() => handlePostComment(newComment, currentUser.id)}
-                    handleCancelPostComment={toggleShowPost}
-                    />
+                <UserContext.Consumer>
+                    {(currentUserContext) => {
+                        <PostComment 
+                            handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
+                            handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
+                            handleCancelPostComment={toggleShowPost}
+                            />
+                    }}
+                </UserContext.Consumer>
             }
             <div className="comment-reply-container">
             <hr />
@@ -51,10 +59,8 @@ function Comment(props) {
                         text={comment.text}
                         date={comment.date}
                         parentId={props.comment.Id}
-                        parentUserId={props.userId}
                         parentUserName={userName}
                         dateCreated={comment.dateCreated}
-                        comments={comment.comments}
                         />
                 })}
             </div>

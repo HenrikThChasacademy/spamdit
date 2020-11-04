@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Comment from './comment/comment';
 import PostComment from './post-comment/post-comment';
 import './spam.scss';
@@ -6,19 +6,17 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Vote from './vote/vote';
-import { useSetTopic } from '../../hooks/useSetTopic';
+import { useSetTopicName } from '../../hooks/useSetTopicName';
 import { useSetUserName } from '../../hooks/useSetUserName';
 import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
-import { useSetUser } from '../../hooks/useSetUser';
-// import UserContext from '../../context/user-context';
+import UserContext from '../../context/user-context';
 
 function Spam(props){
-    const { topic } = useSetTopic(props.spam.topicId);
+    const { topic } = useSetTopicName(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = useSetComments(props.spam.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
-    const { currentUser } = useSetUser();
 
     return(
         <Container className="spam-container">
@@ -33,10 +31,14 @@ function Spam(props){
                 Spammed by {userName} at {props.spam.dateCreated}
             </div>
             <Row md={2}>
-                <Vote 
-                    spamId={props.spam.id}
-                    currentUserId={currentUser.id}
-                    />
+                <UserContext.Consumer>
+                    {(currentUserContext) => 
+                        <Vote 
+                            spamId={props.spam.id}
+                            currentUserId={currentUserContext.currentUser.id}
+                            />    
+                    }
+                </UserContext.Consumer>
             </Row>
             {
                 !showPost &&
@@ -46,11 +48,15 @@ function Spam(props){
             }
             {
                 showPost &&
-                <PostComment 
-                    handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
-                    handlePostComment={() => handlePostComment(newComment, currentUser.id)}
-                    handleCancelPostComment={toggleShowPost}
-                    />
+                <UserContext.Consumer>
+                    {(currentUserContext) =>
+                        <PostComment 
+                            handleTextChange={(text) => handleSetNewComment({text: text, parentId: props.spam.id})}
+                            handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
+                            handleCancelPostComment={toggleShowPost}
+                            />
+                    }
+                </UserContext.Consumer>
             }
             <hr />
             {
@@ -62,10 +68,8 @@ function Spam(props){
                     text={comment.text}
                     date={comment.date}
                     parentId={props.spam.id}
-                    parentUserId={props.userId}
                     parentUserName={userName}
                     dateCreated={comment.dateCreated}
-                    comments={comment.comments}
                     />
             })}
 
