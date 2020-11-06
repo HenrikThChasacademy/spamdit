@@ -9,6 +9,7 @@ import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
 import { useSetNewComment } from '../../../hooks/useSetNewComment';
 import UserContext from '../../../context/user-context';
+import { Link } from 'react-router-dom';
 
 function Comment(props) {
     const { userName } = useSetUserName(props.comment.userId);
@@ -18,7 +19,9 @@ function Comment(props) {
 
     return(
         <Container fluid className="comment-container">
-            <b>{userName}</b> replied to <b>{props.parentUserName}</b> at {props.comment.dateCreated}
+            <Link to={`/userspam/${props.comment.userId}`}> <b>{userName}</b> </Link> replied to 
+            <Link to={`/userspam/${props.parentUserId}`}> <b>{props.parentUserName}</b> </Link> 
+            at {props.comment.dateCreated}
             <p>{props.comment.text}</p>
             <Row md={2}>
                 <UserContext.Consumer>
@@ -60,6 +63,7 @@ function Comment(props) {
                         date={comment.date}
                         parentId={props.comment.Id}
                         parentUserName={userName}
+                        parentUserId={props.comment.userId}
                         dateCreated={comment.dateCreated}
                         />
                 })}

@@ -33,6 +33,14 @@ class spamService {
         }
     }
 
+    getSpamForUser = async (userId) => {
+        try {
+            let response = await axios(this.SPAM_PATH+ "/user/" +userId);
+            return response.data;
+        } catch {
+            return false;
+        }
+    }
 }
 
 export default new spamService();
