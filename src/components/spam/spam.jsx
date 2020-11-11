@@ -12,6 +12,9 @@ import { useSetComments } from '../../hooks/useSetComments';
 import { useSetNewComment } from '../../hooks/useSetNewComment';
 import UserContext from '../../context/user-context';
 import { Link } from 'react-router-dom';
+import ErrorFallback from '../error-fallback/error-fallback';
+import { ErrorBoundary } from 'react-error-boundary';
+
 function Spam(props){
     const { topic } = useSetTopicName(props.spam.topicId);
     const { userName } = useSetUserName(props.spam.userId);
@@ -21,16 +24,17 @@ function Spam(props){
     return(
         <Container className="spam-container">
             <div className="heading">
-                <h2>{topic}</h2>
+                <h2 className="spam-text">{topic}</h2>
             </div>
-            <div className="spam-text">
-                <p>{props.spam.text}</p>
+            <div>
+                <p className="spam-text"><b>{props.spam.text}</b></p>
             </div>
             <br />
             <div className="spam-info">
                 Spammed by 
                 <Link to={`/userspam/${props.spam.userId}`}> <b>{userName}</b> </Link> at {props.spam.dateCreated}
             </div>
+            <br />
             <Row md={2}>
                 <UserContext.Consumer>
                     {(currentUserContext) => 
@@ -63,16 +67,17 @@ function Spam(props){
             {
             comments.lenght !== 0 &&
             comments.map((comment) => {
-                return <Comment 
+                return <ErrorBoundary 
                     key={comment.id}
-                    comment={comment}
-                    text={comment.text}
-                    date={comment.date}
-                    parentId={props.spam.id}
-                    parentUserName={userName}
-                    parentUserId={props.spam.userId}
-                    dateCreated={comment.dateCreated}
-                    />
+                    FallbackComponent={ErrorFallback}>
+                        <Comment 
+                        key={comment.id}
+                        comment={comment}
+                        parentId={props.spam.id}
+                        parentUserName={userName}
+                        parentUserId={props.spam.userId}
+                        dateCreated={comment.dateCreated}/>
+                    </ErrorBoundary>
             })}
 
         </Container>
