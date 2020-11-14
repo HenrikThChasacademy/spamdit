@@ -16,6 +16,16 @@ class userService {
         }
     }
 
+    saveUser = async (user) => {
+        try {
+            let response = await axios.put(this.SPAM_PATH +'/' +user.id, user);
+            return response.data;
+        } catch(e) {
+            console.log(e)
+            return false;
+        }
+    }
+
     getUserById = async (id) => {
         try {
             let response = await axios(this.SPAM_PATH +'/' +id);

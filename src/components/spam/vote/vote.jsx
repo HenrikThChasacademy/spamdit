@@ -11,7 +11,7 @@ function Vote(props) {
     return(
         <Row>
             <Fragment>
-                <Col xs={{ span: 2, offset: 1 }}>
+                <Col xs={{ span: 6, offset: 1 }} md={{ span: 5, offset: 1 }}>
                     {(vote && props.currentUserId) &&
                         <Button variant="outline-success" size="sm" id="vote-btn-success"
                             active={vote.id && vote.isUpvote}
@@ -19,7 +19,7 @@ function Vote(props) {
                     }
                     <p>Upvotes: +{upvotes}</p>
                 </Col>
-                <Col xs={2}>
+                <Col xs={{ spam: 6, offset: 1}} md={5}>
                     {(vote && props.currentUserId) &&
                         <Button variant="outline-danger" size="sm" id="vote-btn-danger"
                             active={vote.id && !vote.isUpvote}
