@@ -11,15 +11,22 @@ import { SketchPicker } from 'react-color';
 function Login(){
     const { isLoggedIn, userName,
         handleLogin, handleLogout, handleUserInputChange } = useSetUser();
-    const { userSettings, saveTextColor, saveUserSettings } = useSetUserSettings();
-    const [displayColorPicker, setDisplayColorPicker] = useState(false);
+    const { userSettings, saveTextColor, saveBackgroundColor, saveUserSettings } = useSetUserSettings();
+    const [displayTextColorPicker, setDisplayTextColorPicker] = useState(false);
+    const [displayBackgroundColorPicker, setDisplayBackgroundColorPicker] = useState(false);
 
-    const handleClick = () => {
-        if (displayColorPicker) {
+    const handleTextColorClick = () => {
+        if (displayTextColorPicker) {
             saveUserSettings(userSettings)
         }
+        setDisplayTextColorPicker(!displayTextColorPicker);
+    };
 
-        setDisplayColorPicker(!displayColorPicker);
+    const handleBackgroundColorClick = () => {
+        if (displayBackgroundColorPicker) {
+            saveUserSettings(userSettings)
+        }
+        setDisplayBackgroundColorPicker(!displayBackgroundColorPicker);
     };
     
     return(
@@ -40,19 +47,31 @@ function Login(){
                 </Fragment>
             }
             </Col>
-            <Col>
-            
-
-                <Button onClick={ handleClick }>Change Text
-                </Button>
-                { 
-                displayColorPicker ? 
-                <SketchPicker color={ userSettings.textColor } onChange={ saveTextColor } />
-                : <p>Color: { userSettings.textColor } </p> }
-
-            
-            </Col>
-
+                {isLoggedIn &&
+                <Fragment>
+                    <Col>
+                    <Button onClick={ handleTextColorClick }>Change Text
+                    </Button>
+                    { 
+                    displayTextColorPicker ? 
+                    <SketchPicker color={ userSettings.textColor } onChange={ saveTextColor } />
+                    : <Row> 
+                        <p>Color: </p><div className="user-color" style={{ backgroundColor: userSettings.textColor }}></div>
+                        </Row> 
+                    }
+                    </Col>
+                    <Col>
+                    <Button onClick={ handleBackgroundColorClick }>Change Backgorund
+                    </Button>
+                    { 
+                    displayBackgroundColorPicker ? 
+                    <SketchPicker color={ userSettings.backgroundColor } onChange={ saveBackgroundColor } />
+                    : <Row> <p>Color: </p><div className="user-color" style={{ backgroundColor: userSettings.backgroundColor }}></div>
+                        </Row>
+                     }
+                    </Col>
+                </Fragment>
+            }
         </Row>
     )
 }
