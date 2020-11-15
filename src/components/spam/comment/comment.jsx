@@ -9,66 +9,81 @@ import { useSetUserName } from '../../../hooks/useSetUserName';
 import { useSetComments } from '../../../hooks/useSetComments';
 import { useSetNewComment } from '../../../hooks/useSetNewComment';
 import UserContext from '../../../context/user-context';
+import UserSettingsContext from '../../../context/user-settings-context';
 import { Link } from 'react-router-dom';
+import ErrorFallback from '../../error-fallback/error-fallback';
+import { ErrorBoundary } from 'react-error-boundary';
 
 function Comment(props) {
+    
     const { userName } = useSetUserName(props.comment.userId);
     const { comments, showPost, toggleShowPost, handlePostComment } = 
         useSetComments(props.comment.id);
     const { newComment, handleSetNewComment } = useSetNewComment();
 
     return(
-        <Container fluid className="comment-container">
-            <Link to={`/userspam/${props.comment.userId}`}> <b>{userName}</b> </Link> replied to 
-            <Link to={`/userspam/${props.parentUserId}`}> <b>{props.parentUserName}</b> </Link> 
-            at {props.comment.dateCreated}
-            <p>{props.comment.text}</p>
-            <Row md={2}>
-                <UserContext.Consumer>
-                    {(currentUserContext) =>
-                        <Vote 
-                            commentId={props.comment.id}
-                            currentUserId={currentUserContext.currentUser.id}
-                            />
-                    }
-                </UserContext.Consumer>
-            </Row>
-            {
-                !showPost &&
-                <Button className="reply-button" size="sm" onClick={toggleShowPost}>
-                    Reply
-                </Button>
+        <UserContext.Consumer>
+        {(currentUserContext) =>
+        (
+            <UserSettingsContext.Consumer>
+            {(currentSettingsContext) => 
+                (
+                    <Container fluid className="comment-container" style={{ backgroundColor: 
+                        currentSettingsContext.userSettings.backgroundColor }}>
+                        <div className="spam-info">
+                            <Link to={`/userspam/${props.comment.userId}`}> <b>{userName}</b> </Link> replied to 
+                            <Link to={`/userspam/${props.parentUserId}`}> <b>{props.parentUserName}</b> </Link> 
+                            at {props.comment.dateCreated}
+                        </div>
+                        <br />
+                        <p className="comment-text" style={{ color: currentSettingsContext.userSettings.textColor }}>
+                            <b>{props.comment.text}</b></p>
+                        <Row md={2}>
+                            <Vote 
+                                commentId={props.comment.id}
+                                currentUserId={currentUserContext.currentUser.id}
+                                />
+                        </Row>
+                        {
+                            !showPost &&
+                            <Button className="reply-button" size="sm" onClick={toggleShowPost}>
+                                Reply
+                            </Button>
+                        }
+                        {
+                            showPost &&
+                            <PostComment 
+                                handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
+                                handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
+                                handleCancelPostComment={toggleShowPost}
+                                />
+
+                        }
+                        <div className="comment-reply-container">
+                        <hr />
+                        {
+                        comments.length !== 0 &&
+                        comments.map((comment) => {
+                                return <ErrorBoundary 
+                                    key={comment.id}
+                                    FallbackComponent={ErrorFallback}>
+                                        <Comment 
+                                        key={comment.id}
+                                        comment={comment}
+                                        parentId={props.comment.Id}
+                                        parentUserName={userName}
+                                        parentUserId={props.comment.userId}
+                                        dateCreated={comment.dateCreated}/>
+                                    </ErrorBoundary>
+                            })}
+                        </div>
+                    </Container>
+                )
             }
-            {
-                showPost &&
-                <UserContext.Consumer>
-                    {(currentUserContext) => {
-                        <PostComment 
-                            handleTextChange={(text) => handleSetNewComment({ text: text, parentId: props.comment.id})}
-                            handlePostComment={() => handlePostComment(newComment, currentUserContext.currentUser.id)}
-                            handleCancelPostComment={toggleShowPost}
-                            />
-                    }}
-                </UserContext.Consumer>
-            }
-            <div className="comment-reply-container">
-            <hr />
-            {
-            comments.length !== 0 &&
-            comments.map((comment) => {
-                    return <Comment 
-                        key={comment.id}
-                        comment={comment}
-                        text={comment.text}
-                        date={comment.date}
-                        parentId={props.comment.Id}
-                        parentUserName={userName}
-                        parentUserId={props.comment.userId}
-                        dateCreated={comment.dateCreated}
-                        />
-                })}
-            </div>
-        </Container>
+            </UserSettingsContext.Consumer>
+            )
+        }
+        </UserContext.Consumer>
     )
     
 }

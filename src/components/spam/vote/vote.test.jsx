@@ -66,8 +66,8 @@ describe('Vote', () => {
             currentUserId={1}
             />);
  
-        await act(() => spamPromise);
-        await act(() => userPromise);
+        await act(async () => spamPromise);
+        await act(async () => userPromise);
         expect(await screen.findByText(/Upvotes: +/));
         expect(await screen.findByText(/Downvotes: -/));
     })

@@ -6,7 +6,10 @@ export const useSetSpam = () => {
     const fetchSpam = useCallback(async () => {
         const spam = await spamService.getSpam();
         if (spam) {
-            setSpamList(spam);
+            console.log(spam)
+            const sortedSpam = spam.sort((a, b) => 
+                (  new Date(b.dateCreated) - new Date(a.dateCreated)))
+            setSpamList(sortedSpam);
         }
     },[])
 
