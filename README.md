@@ -1,3 +1,20 @@
+# Spamdit
+
+App that lets a user spam all day long.
+
+Deployed at http://spamdit.s3-website-eu-west-1.amazonaws.com/
+
+Making calls at api temp url http://spamdit-alb-454020117.eu-west-1.elb.amazonaws.com/
+
+## Run locally
+Change SPAMDIT_API_URL to localhost if running api local.
+
+### API
+https://github.com/HenrikThChasacademy/spamdit-api
+
+
+
+# react-app info
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
