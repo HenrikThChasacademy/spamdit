@@ -8,13 +8,14 @@ import SpamList from '../spam-list/spam-list';
 import UserContext from '../../context/user-context';
 import UserSettingsContext from '../../context/user-settings-context';
 import Menu from '../menu/menu';
+import Footer from '../footer/footer';
 import TopicList from '../topic-list/topic-list';
 import UserSpam from '../user-spam/user-spam';
 import ErrorFallback from '../error-fallback/error-fallback';
 import { ErrorBoundary } from 'react-error-boundary';
 
-function App(props) {
-    const [currentUser, setCurrentUser] = useState({id: ""});
+function App() {
+    const [currentUser, setCurrentUser] = useState({id: "", nrOfSpam: 0});
     const [userSettings, setUserSettings] = useState(false);
     const user = { currentUser, setCurrentUser };
     const settings = { userSettings, setUserSettings };
@@ -40,6 +41,7 @@ function App(props) {
                                 </ErrorBoundary>
                                 <Route exact path="*" render={() => <h1> NOT FOUND</h1>} />
                             </Switch>
+                            <Footer />
                         </Router>
                     </UserSettingsContext.Provider>
                 </UserContext.Provider>

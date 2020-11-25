@@ -1,0 +1,12 @@
+@import '../../styles/variables.scss';
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    min-height: 50px;
+    width: 100%;
+    background-color: $background-color;
+    text-align: center;
+    box-shadow: 2px 2px 6px 2px $shadow-color;
+  }

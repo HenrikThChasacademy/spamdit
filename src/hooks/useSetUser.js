@@ -1,5 +1,6 @@
 import { useContext, useState, useCallback } from 'react';
 import userService from '../service/userService';
+import spamService from '../service/spamService';
 import UserContext from '../context/user-context';
 
 export const useSetUser = () => {
@@ -14,8 +15,12 @@ export const useSetUser = () => {
         }
         const createdUser = await userService.createUser({name: userName});
         if (createdUser) {
-            setCurrentUser(createdUser);
-            setIsLoggedIn(true);
+            const spam = await spamService.getSpamForUser(createdUser.id);
+            if (spam) {
+                var user = {...createdUser, nrOfSpam: spam.length}
+                setCurrentUser(user);
+                setIsLoggedIn(true);
+            }
         }
     }, [setCurrentUser, userName])
 
